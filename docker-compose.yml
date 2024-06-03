@@ -1,0 +1,33 @@
+version: '2'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    container_name: food_app_nxjs_2
+    hostname: food_app_nxjs_2
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_WEB_HOST}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${URL_PREFIX}.rule=Host(`foodapp.sreher.de`)"
+      - "traefik.http.routers.${URL_PREFIX}.entrypoints=websecure"
+      - "traefik.http.routers.${URL_PREFIX}.tls.certresolver=myresolver"
+      - "traefik.docker.network=traefik-net"
+      - "traefik.http.middlewares.${URL_PREFIX}.ratelimit.average=100"
+      - "traefik.http.middlewares.${URL_PREFIX}.ratelimit.burst=50"
+#      - "traefik.http.routers.${URL_PREFIX}.middlewares=auth"
+#      - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$D3PGhrMK$$w7w.LRTVzbT4D/m9/c5Cy1"
+    networks:
+      - traefik-net
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000"
+
+networks:
+     traefik-net:
+       external: true
+
