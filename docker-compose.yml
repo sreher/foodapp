@@ -5,13 +5,13 @@ services:
       context: .
       dockerfile: Dockerfile
     env_file: .env
-    container_name: food_app_nxjs_2
-    hostname: food_app_nxjs_2
+    container_name: todo_app_nxjs
+    hostname: todo_app_nxjs
     environment:
       - VIRTUAL_HOST=${VIRTUAL_WEB_HOST}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${URL_PREFIX}.rule=Host(`foodapp.sreher.de`)"
+      - "traefik.http.routers.${URL_PREFIX}.rule=Host(`${VIRTUAL_WEB_HOST}`)"
       - "traefik.http.routers.${URL_PREFIX}.entrypoints=websecure"
       - "traefik.http.routers.${URL_PREFIX}.tls.certresolver=myresolver"
       - "traefik.docker.network=traefik-net"
@@ -30,4 +30,3 @@ services:
 networks:
      traefik-net:
        external: true
-
